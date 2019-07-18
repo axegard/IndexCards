@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+{% include 'include/head.html' %}
+
+<body>
+<div class="aligned" >
+<div class="aligned-item" style="color:white">
+<h1 class="hidden-sm-down">The Brief Case</h1>
+<h1 class="hidden-md-up"><center>The Brief Case</center></h1>
+
+
+
+<form target="_self" method="get" action="search" onloadstart="search()">
+<div class="form-group">
+        <div class="row">
+                <div class="col-lg-8">
+<input type="text" onkeypress="searchButtonShow()" class="form-control form-control-lg" name="keywords" id="keywords" placeholder="keywords">
+                </div>
+<!-- put something else here, looks good layout-wise -->
+                <div class="col-lg-4">
+<input type="zip" onkeypress="searchButtonShow()" class="form-control form-control-lg" name="none" id="from" placeholder="placeholder">
+                </div>
+        </div>
+
+<!-- Alternative layout for input of correspondents!
+        <div class="input-group input-group-sm">
+<span class="input-group-addon" id="sizing-addon3">Correspondents</span>
+<input type="text" onkeypress="searchButtonShow()" class="form-control form-control-lg" name="correspondent_1" id="keywords" placeholder="first">
+<input type="zip" onkeypress="searchButtonShow()" class="form-control form-control-lg" name="correspondent_2" id="from" placeholder="second">
+
+        </div>
+-->
+    {# test #}
+Correspondents
+    <div class="input-group input-group-sm ">
+  <input type="text" class="form-control" name="correspondent_1" placeholder="first" aria-describedby="sizing-addon3">
+
+  <input type="text" class="form-control form-control-lg" name="correspondent_2" placeholder="second" aria-describedby="sizing-addon3">
+</div>
+
+    {#  test #}
+Date
+<div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Year</span>
+  <input type="text" class="form-control" name="year" placeholder="year" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">Month</span>
+  <input type="text" class="form-control" name="month" placeholder="month" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">Day</span>
+  <input type="text" class="form-control" name="day" placeholder="day" aria-describedby="sizing-addon3">
+</div>
+
+
+
+
+View <input type="radio" value="0" name="view" checked="checked"/> List <input type="radio" value="1" name="view"/> Index card
+
+<div class="sub" id="search" style="display: none;">
+<br>
+<button type="submit" class="btn btn-lg btn-block btn-secondary">Search</button>
+</div>
+</div>
+</form>
+
+by <a href="http:/www.axegard.se"><span style="color:white" >axegard.se</span></a>
+</div>
+</div>
+</div>
+<div>
+</body>
+</html>

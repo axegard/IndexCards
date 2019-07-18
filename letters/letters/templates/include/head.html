@@ -1,0 +1,165 @@
+<head>
+<link rel="icon" type="image/png" href="/static/assets/icon.png">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:type" content="website" />
+<meta property="og:description" content="Progres of science through letters" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="letters.online" />
+<title>The Brief Case</title>
+<style>
+.aligned {
+display: -moz-flex;
+display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+display: -ms-flexbox; /* TWEENER - IE 10 */
+display: -webkit-flex; /* NEW - Chrome */
+display: flex;
+align-items: center;
+margin-left: auto;
+margin-right: auto;
+justify-content: center;
+}
+.aligned-item {
+max-width: 60%;
+margin-top: 20%;
+}
+h1, h2, h3, h4, h5, h6, .arvo {
+font-family: 'Arvo';
+color: white;
+}
+
+
+
+
+body{
+background-color: #1D3461;
+}
+.sub{
+align-self: right;
+}
+.politiwatch{
+font-family: 'Arvo';
+color: white;
+}
+</style>
+<script>
+function searchButtonShow(){
+$("#search").slideDown();
+}
+function crashToggle(){
+$("#crash").fadeToggle();
+}
+</script>
+
+
+
+<! -- separator -->
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css" integrity="sha256-4y5taf5SyiLyIqR9jL3AoJU216Rb8uBEDuUjBHO9tsQ=" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Brief Case</title>
+<link rel="icon" type="image/png" href="/static/assets/icon.png">
+<style>
+body{
+margin-top: 5%;
+}
+h1, h2, h3, h4, h5, h6, .arvo {
+font-family: 'Arvo';
+display: inline;
+}
+hr{
+color: white;
+}
+footer{
+margin-bottom: 0%;
+}
+body{
+background-color: #1D3461;
+}
+.politiwatch{
+font-family: 'Arvo';
+color: white;
+}
+.right{
+margin-right: 0px;
+}
+.sidebar-outer {
+position: relative;
+right: 0%;
+}
+@media screen and (min-width:961px) {
+#container{
+max-width: 60%;
+}
+}
+.fixed {
+position: fixed;
+top: 20%;
+}
+.officials > a{
+color: #ccc
+}
+.headshot{
+border-radius: 5px;
+max-width: 130px;
+}
+.name{
+font-size: 30px;
+}
+#container{
+@media (min-width:801px) {
+max-width: 60%;
+}
+}
+.icon{
+size: 120%;
+}
+p{
+overflow: hidden;
+}
+</style>
+<script>
+function searchButtonShow(){
+$("#search").slideDown();
+}
+function toggle(id){
+if($("#full-" + id).is(":visible")){
+$("#icon-"+id).removeClass("octicon-dash");
+$("#icon-"+id).addClass("octicon-plus");
+$("#full-"+id).slideUp();
+$('#name-'+id).animate({
+fontSize: "1.5rem"
+}, 400)
+$('#role-'+id).animate({
+fontSize: "1rem"
+}, 400)
+}else{
+$("#icon-"+id).removeClass("octicon-plus");
+$("#icon-"+id).addClass("octicon-dash");
+$("#full-"+id).slideDown();
+$('#name-'+id).animate({
+fontSize: "1.5rem"
+}, 400)
+$('#role-'+id).animate({
+fontSize: "1.5rem"
+}, 400)
+}
+}
+
+
+
+</script>
+
+</head>
+

@@ -1,0 +1,327 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+{% include 'include/head.html' %}
+
+<head>
+       <style type="text/css">
+  .demo-droppable {
+/*    background: #08c; */
+    color: #fff;
+    text-align: center;
+
+
+	/* Courtesy of https://css-tricks.com/examples/DragAndDropFileUploading/?submit-on-demand */
+   outline: 2px dashed #92b0b3;
+   outline-offset: -10px;
+   background-color: #c8dadf;
+   padding: 100px 20px;
+
+  }
+  .demo-droppable.dragover {
+    background: #00CC71;
+  }
+  .upload-text {
+
+	font-family: Roboto, sans-serif;
+	color: #0f3c4b; 
+  }
+
+
+.row + .row {
+  margin-top: 30px;
+}
+
+</style>
+
+
+</script>
+</head>
+    <body>
+
+
+   <div class="container" id="container"
+<div class="aligned">
+
+
+    {% if error_message is defined %}
+    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+    {% endif %}
+
+<div class="alert alert-warning" </div>
+
+    {% if success is defined%}
+<div class="alert alert-success" role="alert">Letter successfully submitted! {{ debug }}<a href="/letter/?id={{entry_id}}">(link)</a>{#   debug #}</div>
+
+    {% if sender_INSERT_status[0] == 'True' %}
+        <div class="alert alert-success" role="alert"> Person <a href="/person/?id={{ sender_INSERT_status[4] }}">{{ sender_INSERT_status[1] }} {{ sender_INSERT_status[2] }} {{ sender_INSERT_status[3] }} </a> added to database. {# Click <a href="/person/?id={{ sender_INSERT_status[4] }}&edit=true"> here </a> to edit person entry! #}</div>
+    {% endif %}
+    {%  if addressee_INSERT_status[0] == 'True' %}
+                <div class="alert alert-success" role="alert"> Person <a href="/person/?id={{ addressee_INSERT_status[4] }}">{{ addressee_INSERT_status[1] }} {{ addressee_INSERT_status[2] }} {{ addressee_INSERT_status[3] }} </a> added to database. Click <a href="/person/?id={{ addressee_INSERT_status[4] }}&edit=true"> here </a> to edit person entry!</div>
+    {% endif %}
+    {% endif %}
+<dl class="dl-horizontal"> <dt>Submit letter {{ debug }}</dt>
+
+      <div class="checkbox" style="float:right">
+    <label>
+     <input type="checkbox" name="hide_letter" value="off"> Hide letter
+    </label>
+  </div>
+
+<form action="/submit/"  enctype="multipart/form-data" novalidate="" method="post" id="form_sub">
+Sender
+        {% if author|length > 0 %}
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">title</span>
+                <input type="text" class="form-control" name="sender_title" placeholder="" value="{{ author[1] }}" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">forename</span>
+                <input type="text" class="form-control" name="sender_forename" placeholder="" value="{{ author[2] }}" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">surname</span>
+                <input type="text" class="form-control" name="sender_surname" placeholder="" value="{{ author[3] }}" aria-describedby="sizing-addon3">
+            </div>
+        {% else %}
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">title</span>
+                <input type="text" class="form-control" name="sender_title" placeholder="" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">forename</span>
+                <input type="text" class="form-control" name="sender_forename" placeholder="" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">surname</span>
+                <input type="text" class="form-control" name="sender_surname" placeholder="" value="" aria-describedby="sizing-addon3">
+            </div>
+
+        {% endif %}
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">inferred</span>
+                <input type="text" class="form-control" name="sender_inferred" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+                <input type="text" class="form-control" name="sender_uncertain" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+            </div>
+            <br>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">address</span>
+                <input type="text" class="form-control" name="sender_address" placeholder="" aria-describedby="sizing-addon3">
+                <span class="input-group-addon" id="sizing-addon3">inferred</span>
+                <input type="text" class="form-control" name="sender_address_inferred" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+                <input type="text" class="form-control" name="sender_address_uncertain" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+            </div>
+
+
+Recipient
+        {% if addressee|length > 0 %}
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">title</span>
+                <input type="text" class="form-control" name="recipient_title" placeholder="" value="{{ addressee[1] }}" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">forename</span>
+                <input type="text" class="form-control" name="recipient_forename" placeholder="" value="{{ addressee[2] }}" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">surname</span>
+                <input type="text" class="form-control" name="recipient_surname" placeholder="" value="{{ addressee[3] }}" aria-describedby="sizing-addon3">
+            </div>
+        {% else %}
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">title</span>
+                <input type="text" class="form-control" name="recipient_title" placeholder="" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">forename</span>
+                <input type="text" class="form-control" name="recipient_forename" placeholder="" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">surname</span>
+                <input type="text" class="form-control" name="recipient_surname" placeholder="" value="" aria-describedby="sizing-addon3">
+         </div>
+
+        {% endif %}
+                <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">inferred</span>
+                <input type="text" class="form-control" name="recipient_inferred" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+                <input type="text" class="form-control" name="recipient_uncertain" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+            </div>
+            <br>
+
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">address</span>
+                <input type="text" class="form-control" name="recipient_address" placeholder="" aria-describedby="sizing-addon3">
+                <span class="input-group-addon" id="sizing-addon3">inferred</span>
+                <input type="text" class="form-control" name="recipient_address_inferred" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+
+                <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+                <input type="text" class="form-control" name="recipient_address_uncertain" placeholder="True/false" value="" aria-describedby="sizing-addon3">
+            </div>
+
+Date
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">year</span>
+  <input type="text" class="form-control" name="year" placeholder="" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">inferred</span>
+  <input type="text" class="form-control" name="year_inferred" placeholder="True/False" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+  <input type="text" class="form-control" name="year_uncertain" placeholder="True/False" aria-describedby="sizing-addon3">
+<!-- For future: pretty date-picker http://codepen.io/anon/pen/KWpwEo -->
+</div>
+
+    {# Date inferred input #}
+<div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Month</span>
+  <input type="text" class="form-control" name="month" placeholder="" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">inferred</span>
+  <input type="text" class="form-control" name="month_inferred" placeholder="True/False" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+  <input type="text" class="form-control" name="month_uncertain" placeholder="True/False" aria-describedby="sizing-addon3">
+</div>
+
+        {# Date uncertain input #}
+<div class="input-group input-group-sm">
+      <span class="input-group-addon" id="sizing-addon3">Day</span>
+  <input type="text" class="form-control" name="day" placeholder="" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">inferred</span>
+  <input type="text" class="form-control" name="day_inferred" placeholder="True/False" aria-describedby="sizing-addon3">
+
+  <span class="input-group-addon" id="sizing-addon3">uncertain</span>
+  <input type="text" class="form-control" name="day_uncertain" placeholder="True/False" aria-describedby="sizing-addon3">
+</div>
+
+
+
+
+
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">Notes</span>
+  <input type="text" class="form-control" name="date_notes" placeholder="" aria-describedby="sizing-addon3">
+</div>
+
+tblItem information
+<div class="input-group input-group-sm">
+  <span class="input-group-addon" id="sizing-addon3">language</span>
+  <input type="text" class="form-control" name="language" placeholder="i.e. French" aria-describedby="sizing-addon3">
+
+</div>
+
+
+Transcript
+{# begin hide transcript checkbox #}
+     <div class="checkbox" style="float:right">
+    <label>
+     <input type="checkbox" name="hide_transcript" value="off"> Hide transcript
+    </label>
+  </div>
+{# end hide transcript checkbox #}
+
+<textarea class="form-control" rows="2" name="transcript" form="form_sub" placeholder="Lorem ipsum dolor ..."></textarea>
+Summary
+<textarea class="form-control" rows="2" name="summary" form="form_sub" placeholder="Lorem ipsum dolor ..."></textarea>
+
+{# begin hide image checkbox #}
+     <div class="checkbox" style="float:right">
+    <label>
+     <input type="checkbox" name="hide_images" value="off"> Hide images
+    </label>
+  </div>
+
+
+{# end hide image checkbox #}
+{#  begin test image upload #}
+1337
+        Select images: <input type="file" name="img" multiple>
+
+{#  end test image upload #}
+
+<!-- Upload form credit: http://bitwiser.in/tutorial-demos/2015/08/08/drag-n-drop-demo.html -->
+
+
+{#  begin implement later
+<div class="demo-droppable">
+
+<svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
+
+  <p class="upload-text"><strong>Choose a file (click)</strong> or drag to upload</p>
+<input type="file" multiple="true" style="display: none;"></div>
+
+<div class="output"></div>
+
+<script type="text/javascript">
+  (function(window) {
+    function triggerCallback(e, callback) {
+      if(!callback || typeof callback !== 'function') {
+        return;
+      }
+      var files;
+      if(e.dataTransfer) {
+        files = e.dataTransfer.files;
+      } else if(e.target) {
+        files = e.target.files;
+      }
+      callback.call(null, files);
+    }
+    function makeDroppable(ele, callback) {
+      var input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('multiple', true);
+      input.style.display = 'none';
+      input.addEventListener('change', function(e) {
+        triggerCallback(e, callback);
+      });
+      ele.appendChild(input);
+      
+      ele.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        ele.classList.add('dragover');
+      });
+
+      ele.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        ele.classList.remove('dragover');
+      });
+
+      ele.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        ele.classList.remove('dragover');
+        triggerCallback(e, callback);
+      });
+      
+      ele.addEventListener('click', function() {
+        input.value = null;
+        input.click();
+      });
+    }
+    window.makeDroppable = makeDroppable;
+  })(this);
+  (function(window) {
+    makeDroppable(window.document.querySelector('.demo-droppable'), function(files) {
+      console.log(files);
+      var output = document.querySelector('.output');
+      output.innerHTML = '';
+      for(var i=0; i<files.length; i++) {
+        if(files[i].type.indexOf('image/') === 0) {
+          output.innerHTML += '<img width="200" height="250" src="' + URL.createObjectURL(files[i]) + '" />';
+        }
+        output.innerHTML += '<p>'+files[i].name+'</p>';
+      }
+    });
+  })(this);
+</script>
+   end implement later #}
+<br>
+  <button type="submit" style="align:center" id="upload-image" src"class="btn btn-default">Submit</button>
+
+
+</form>
+
+</div>
+</div>
+</body></html>

@@ -1,0 +1,123 @@
+
+.viewer-controls {
+	position:absolute;
+	bottom:10px;
+	left:160px;     /* WAS 215px - but causes layout issue when transcript and scan viewed together */
+	z-index:500;
+}
+.viewer-controls ul {
+	list-style-type:none;
+	display:inline;	
+}
+.panel .viewer-controls li {
+	float:left;
+	height:34px;
+	width:34px;
+	border: 1px solid #747474;
+	background-color:#fff;
+	background-image: none;
+	background-position: center center;
+    background-repeat: no-repeat;
+	margin:0 5px 0 0;
+	padding:0;
+	cursor: pointer;
+}
+
+
+.XXiviewer_common {
+    border: 1px solid #747474;
+    bottom: 10px;
+    height: 28px;
+	width:28px;
+    position: absolute;
+    z-index: 5000;
+}
+.iviewer_cursor {
+    Xcursor: url(images/hand.cur) 6 8, pointer;
+	cursor:hand;
+}
+.iviewer_drag_cursor {
+    cursor: url("images/grab.cur") 6 8, pointer;
+}
+.XXiviewer_button {
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    width: 28px;
+}
+.panel .viewer-controls  .iviewer_zoom_in {
+    background-image: url(images/iviewer.zoom_in.gif);
+}
+.panel .viewer-controls  .iviewer_zoom_out {
+    background-image: url(images/iviewer.zoom_out.gif);
+}
+.panel .viewer-controls  .iviewer_zoom_zero {
+    background-image: url(images/iviewer.zoom_zero.gif);
+}
+.panel .viewer-controls  .iviewer_zoom_fit {
+    background-image: url(images/iviewer.zoom_fit.gif);
+}
+.panel .viewer-controls  .iviewer_zoom_status {
+    text-align: center;
+	line-height:34px;
+	font-weight:bold;
+}
+.panel .viewer-controls  .iviewer_rotate_left {
+    background-image: url(images/iviewer.rotate_left.png);
+}
+.panel .viewer-controls  .iviewer_rotate_right {
+    background-image: url(images/iviewer.rotate_right.png);
+}
+
+            
+
+
+.viewer {
+	width: 700px;
+	height: 800px;
+	border: 1px solid #015B28;
+	position: relative;
+	text-align: center;
+	margin:0 auto 30px;
+	background-color:#fff;
+}
+
+.viewer-both {
+	width: 485px;
+	height: 800px;
+	border: 1px solid #015B28;
+	position: relative;
+	text-align: center;
+}
+
+.likeabutton {
+	text-decoration: none;
+	display: inline-block; 
+	padding: 4px 10px;
+	background: ButtonFace; 
+	color: ButtonText;
+	border-style: solid; 
+	border-width: 2px;
+	border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+
+#file-content-big {
+	align:left;width:450px;
+	height:800px;
+	overflow: scroll;
+	border-top:1px solid #015b28;
+	border-bottom:1px solid #015b28;
+	border-left: 1px solid #015b28;
+	border-right: 1px solid #015b28;
+}
+
+#file-content-small {
+	align:center;
+	width:950px;
+	height:500px;
+	overflow: scroll;
+	border-top:1px solid #015b28;
+	border-bottom:1px solid #015b28;
+	border-left: 1px solid #015b28;
+	border-right: 1px solid #015b28;
+}

@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+{% include 'include/head.html' %}
+    <body>
+
+   <div class="container" id="container"
+<div class="aligned">
+
+<div class="alert alert-warning" </div>
+<dl class="dl-horizontal"> <dt>{{ person_dict['Title'] }} {{ person_dict['Surname']}} {{person_dict['Forenames'] }}</dt>
+    <div class="col-md-3">
+<img class="headshot" src="http://i.dailymail.co.uk/i/pix/2016/12/29/15/3BB35C5500000578-4073628-C_SPAN_revealed_the_oil_painting_of_president_elect_Donald_Trump-m-7_1483027151879.jpg">
+</div>
+    <div class="col-md-4">
+        Birth: <br>
+        Death: <br>
+        NotesCopyright: <br>
+        CopyrightCreditLine: <br>
+        Permission: <br>
+        NotesPerson: <br>
+</div>
+
+<div class="col-md-4">
+        {{ person_dict['BirthDate'] }} <br>
+        {{ person_dict['DeathDate'] }} <br>
+        {{ person_dict['NotesCopyright'] }} <br>
+        {{ person_dict['CopyrightCreditLine'] }} <br>
+        {{ person_dict['Permission'] }} <br>
+        {{ person_dict['NotesPerson'] }} <br>
+</div>
+<br><br><br><br>
+<br><br><br>
+
+Biography
+<blockquote style="background:white;color:black">
+  <p>{{person_dict['Biography']}}</p>
+</blockquote>
+   ScrutinyBiog
+   <p>{{ person_dict['ScrutinyBiog'] }}</p>
+
+by user_ID?
+</div>
+    </div>
+</body></html>
+

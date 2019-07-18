@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+{% include 'include/head.html' %}
+
+{#body #}
+<body>
+<div class="container" id="container">
+
+
+<form target="_self" method="get" action="/search/" onloadstart="search()">
+<div class="form-group">
+<div class="row">
+<div class="col-lg-8">
+<input onkeypress="searchButtonShow()" class="form-control form-control-lg" name="sender" id="address" placeholder="sender" value="{{author_name}}" type="address">
+</div>
+<div class="col-lg-4">
+<input onkeypress="searchButtonShow()" class="form-control form-control-lg" name="year" id="zip" placeholder="year" value="{{GET_year}}" type="zip">
+</div>
+</div>
+<div class="sub" id="search" style="display: none;">
+<br>
+<button type="submit" class="btn btn-lg btn-block btn-secondary">Search</button>
+</div>
+</div>
+</form>
+
+{% if author|length == 1  %}
+<p></p><h2 style="color: white;">letters from <a href="/person/?id={{author_ID}}"><i>{{author_name}}</i></a> to:</h2><p></p>
+{% elif author|length > 1 %}
+    <p></p><h2 style="color: white;">Multiple matches. Please select one: </h2><p></p>
+{% else %}
+<p></p><h2 style="color: white;"> No letters from <a href="/person/?id={{author_ID}}"<i> {{author_name}}</i></a> found.{{ author }}</h2><p></p>
+{% endif %}
+
+{# table start #}
+<div class="card">
+<ul class="list-group list-group-flush">
+
+{% if author|length == 1  %}
+    {% for addressee_ID,addressee_name in addressee_dict.iteritems() %}
+<li class="list-group-item">
+<div class="namer" onclick="toggle('{{ addressee_ID }}')">
+<h4 class="card-title" id="name-{{ addressee_ID }}" style="font-size: 1.5rem;">
+... to <a href="/person/?id={{addressee_ID}}"><i>{{addressee_name}}</i></a>
+</h4>
+<h6 class="card-subtitle text-muted" id="role-{{ addressee_ID }}" style="font-size: 1rem;">{#{i['bio_born']}}-{{i['bio_death']}}, {{i['prof']}#}
+
+{#<span style="color: red;" class="octicon octicon-primitive-dot"></span>#}
+
+</h6>
+<span class="glyphicon glyphicon-plus icon"></span>
+
+<a style="float: right;">&nbsp;&nbsp;
+    
+    <span class="octicon octicon-plus" id="icon-{{ addressee_ID }}"></span>
+</a>
+
+    {# Link to Wiki article .. or just clutter?
+<a href="https://en.wikipedia.org/w/index.php?search={{addressee_name}}" style="float:right" class="btn btn-large btn-secondary">Wikipedia</a>
+ #}
+
+</div>
+<div id="full-{{ addressee_ID }}" style="display: none;">
+<hr>
+
+
+List view
+    <table class="table table-striped table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Letter #</th>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Recipient</th>
+            </tr>
+        </thead>
+
+{% for row in response_SELECT_tblMaster %}
+    {% if row[4] == addressee_ID  %}
+                            {# SELECT pk_WCP_Number,Year,Month,Day,fk_PersonID_Addressee,fk_PersonID_Author FROM tblMaster #}
+                            {# Index:
+                                0:pk_WCP_Number
+                                1:Year
+                                2:Month
+                                3:Day
+                                4:fk_PersonID_Addressee
+                                5:fk_PersonID_Author    #}
+        <tbody>
+            <tr>
+                <th scope="row"><a href="/letter/?id={{ row[0] }}">{{ row[0] }}</a></th>
+                <td>{{ row[1] }} {{ row[2] }} {{ row[3] }}
+                <td>{#  {{ row[5] }}  {{ author_ID }}#} {{ author_name }}</td> {# Todo: kör via dict istället ! Lättare att extenda till responses#}</td>
+                <td>{{ addressee_dict[row[4]] }}</td>
+            </tr>
+  </tbody>
+            {% endif %}
+{% endfor %}
+            </table>
+end list view <br>
+Begin index card view
+    <div class="row">
+        <div class="col-md-3">
+
+        {% for row in response_SELECT_tblMaster %}
+            {% if row[4] == addressee_ID  %}
+<p> 
+<a href="/letter/?id={{row[0]}}">{{row[1]}} </a>
+<p>
+            {% endif %}
+        {% endfor %}
+</div>
+</div>
+End index cardview
+
+<small><a href="/submit?from={{author_ID}}&to={{addressee_ID}}">Submit a letter</a></small>
+
+</div></li>
+
+{% else %}
+No matches found
+
+    {% endfor %}
+{% elif author|length > 1 %}
+        <ul class="list-group">
+        {% for pk_PersonID,Title,Forenames,Surname,BirthDate,DeathDate in author %}
+            <li class="list-group-item"><a href="/search/?sender_id={{ pk_PersonID }}" >{{ Title }} {{ Forenames }} {{ Surname }}<a>, {{ BirthDate }}-{{ DeathDate }}</li>
+
+        {% endfor %}
+        </ul>
+{% else %}
+{% endif %}
+
+
+</ul>
+{#
+<div class="card-block">
+Data sourced from placeholder 
+</div>
+#}
+</div>
+
+{# table end #}
+
+<div class="sub" id="bypolitiwatch" style="color: white;">
+    <small>Click <a style="color: red" href="/submit?from={{author_ID}}"><u>here</u> </i></a><i>to submit a letter of <u>{{ author_name }}{{GET_sender}}</u></small><br>
+by <a href="http:///www.axegard.se"><span class="politiwatch">axegard.se</span></a><br>
+GitHub repo: <a href="https://github.com/maxegard/letters">https://github.com/maxegard/letters</a>
+</div>
+</div>
+</body>
+{#end body #}
+</html>

@@ -1,0 +1,416 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+{% include 'include/head.html' %}
+    <body>
+        
+        <div id="page-container">
+            <div id="page-body">
+
+<h2 class="details-header">Record number: {{item_head_dict['pk_WCP_Number']}}</h2>
+
+
+<div id="column-c" class="column">
+    <div class="panel clearfix">
+        <div class="panel-a">
+            <div class="panel-content">
+                <dl>
+                            <dt>Sent by:</dt>
+                    <dd>
+                                    <a href="/person-detail.html?personID=1">{{item_head_dict['sender_name']}}</a>
+                    </dd>
+                    
+                        <dt>Sent to:</dt>
+                        <dd>
+                                    {{item_head_dict['recipient_name']}}
+                                
+                        </dd>
+                            <dt>On:</dt>
+                    <dd>
+                                     {{item_head_dict['Day']}} {{item_head_dict['Month']}} {{item_head_dict['Year']}}
+                    </dd>
+                </dl>
+
+                <p>
+                        Sent by <b>
+                            {{item_head_dict['sender_name']}}</b>, 
+                        [address not recorded] HARD
+                            to<b>
+                            {{item_head_dict['recipient_name']}}</b>
+                        [address not recorded] HARD
+                            on
+                         {{item_head_dict['Day']}} {{item_head_dict['Month']}} {{item_head_dict['Year']}}.
+                    
+                </p>
+                <dl>
+                        <dt>Record created:</dt>
+                        <dd>19 June 2015  HARD
+                            
+                                by Benny, Ruth HARD
+                        </dd>
+                </dl>
+            </div>    
+        </div>
+        <div class="panel-b">
+            <div class="panel-content">
+                        <h4 id="summaryh4">Summary</h4>
+                        <p id="summary" style="display:block;">{{item_head_dict['Summary']}}</p>
+            </div>
+                <div class="panel-content">
+
+                    <a href="#" onclick="javascript:displayhide('notes', 'notesh4');
+                            javascript:return false;"><h4 id="notesh4" style="background: url(&quot;http://www.nhm.ac.uk/undefined/css/images/arrow-up.png&quot;) right center no-repeat;">Record notes</h4></a>
+                    <p id="notes" style="display: block;">Poem, 'The Loss of the Helen', August 1852. HARD</p>
+                </div>
+            
+
+        </div>
+
+        <div class="panel-content view-options">
+            <div id="record-contains">
+                <h4>Record contains:</h4>
+                <ul>
+                    
+                        <li>
+                            <span title="publication"><img src="http://www.nhm.ac.uk/research-curation/scientific-resources/collections/library-collections/wallace-letters-online/images/publication.png" alt="publication"> (1)</span>
+                        </li>
+                    
+                </ul>
+            </div>
+            
+            <div class="record-view-selection">
+                <h4>View item: </h4>
+                <form id="command" name="command" action="http://www.nhm.ac.uk/research-curation/scientific-resources/collections/library-collections/wallace-letters-online/6518/details.html" method="POST">
+
+
+                    <fieldset>
+                        <select id="letterSelect" name="itemId">
+                            <option value="">select record to view</option>
+                            <option id="itemEntry1" value="7522" selected="selected">PUBLICATION  {{item_head_dict['pk_WCP_Number']}}.</option>
+                        </select>
+                    </fieldset>
+                    <fieldset class="buttons">
+                        <input type="submit" onsubmit="document.command.submit();" value="View" class="viewButton">
+                        
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>  
+
+    </div>
+</div>
+    <div id="column-c" class="column">
+        <div class="panel clearfix">
+            <div class="panel-a">
+                <div class="panel-content">
+                    <h4>PUBLICATION (WCP6518.7522)</h4>
+                            <p>Wallace, Alfred Russel. (1972). <i>Alfred Russel Wallace, A Narrative of Travels on the Amazon and Rio Negro</i>. New York: Dover. viii-x. [p. viii-ix]</p>
+                        <p></p>
+                        <!--<p>&copy; Natural History Museum, London</p>-->
+                        <dl>
+                                <dt>Copyright owner:</dt>
+                                <dd>©A. R. Wallace Literary Estate</dd>
+                            <dt>Record scrutiny:</dt>
+                            <dd>19/06/2015 - Benny, Ruth; 
+</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="panel-b">
+                    <div class="panel-content">
+                        <a href="" onclick="javascript:displayhide('transcript-details', 'transcript-detailsh4');
+                                javascript:return false;"><h4 id="transcript-detailsh4" style="background: url(&quot;undefined/css/images/arrow-up.png&quot;) right center no-repeat;">Transcription information</h4></a>
+                        <p id="transcript-details" style="display: block;">
+                            
+                                <b>Transcriber:</b> Benny, Ruth<br>
+                            
+                            
+                                <b>Transcription date:</b> June 19, 2015<br>
+                                <b>Scrutiny:</b> 19/06/2015 - Benny, Ruth; 
+<br>
+                                    <b>Signed off:</b> no<br>
+                        </p>
+                    </div>
+                
+            </div>
+                <div class="panel-content view-options">
+
+                    <div class="record-view-selection">
+                        <h4>View: </h4>
+                        <form id="command" name="command1" action="/research-curation/scientific-resources/collections/library-collections/wallace-letters-online/6518/7522/view.html" method="POST">
+                            <!--<form action="" class="radio-list">-->
+                            <fieldset class="radio">
+
+                                
+                                    <input id="show1" name="show" onclick="document.command1.submit();" type="radio" value="T" checked="checked"><label for="show1">Transcript</label> 
+                                
+
+                                
+                                    <input id="show2" name="show" onclick="document.command1.submit();" type="radio" value="S"><label for="show2">Scan</label> 
+                                
+                                
+                                    <input id="show3" name="show" onclick="document.command1.submit();" type="radio" value="B"><label for="show3">Transcript &amp; scan</label> 
+                                
+                            </fieldset>
+                            <!--</form>-->
+                        </form>
+                    </div>
+
+                    
+                        <div class="print-options">
+                            <input type="hidden" value="/resources/research-curation/projects/wallace-correspondence/transcripts/pdf/WCP6518_P7522.pdf" class="pdf-file">
+                            
+                            <ul>
+                                
+                                <li>
+                                    <a title="Save transcript as PDF" href="/resources/research-curation/projects/wallace-correspondence/transcripts/pdf/WCP6518_P7522.pdf">
+                                        <img width="16" height="16" alt="PDF" src="http://www.nhm.ac.uk/research-curation/scientific-resources/collections/library-collections/wallace-letters-online/images/social-icons/adobe-pdf-icon.png">
+                                        View PDF of transcript
+                                    </a>
+                                </li>
+                            </ul>
+
+
+
+
+
+                            
+
+                        </div>
+                    
+
+                </div>
+
+                <div class="panel-content">
+
+
+
+                    
+
+                        <div id="transcript-container">
+                                <div>
+                                    <h3>Transcript</h3>
+                                </div>
+                                <div>
+                                    <ul class="recordset-nav-pages">
+                                    
+
+                                        
+                                            
+                                                <li><a href="#1" class="scroll" style="background-color:#015B28;color:white" id="page1">1</a></li>
+                                                
+                                                
+                                            
+
+                                    
+
+                                        
+                                            
+                                                
+                                                <li><a href="#2" class="scroll">2</a></li>
+                                                
+                                            
+
+                                    
+                                </ul>
+                            </div>
+                            <div id="transcript">
+                                <style type="text/css">.b1{white-space-collapsing:preserve;}
+.b2{margin: 1.0in 1.2479167in 0.9847222in 1.2479167in;}
+.s1{font-style:italic;}
+.p1{text-align:start;hyphenate:auto;font-family:Arial;font-size:12pt;}
+</style><p class="p1">
+<span><a class="innerScroll" href="#1" id="1">[[1]]</a> </span><span class="s1">[p. viii]</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>THE LOSS OF THE "HELEN"</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>AUGUST 1852</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>"Twas on the wide Atlantic the good ship held her way</span>
+</p>
+<p class="p1">
+<span>And as she cleft the ocean wave rose merrily the spray.</span>
+</p>
+<p class="p1">
+<span>For five and twenty days and nights we'd heard old ocean's roar</span>
+</p>
+<p class="p1">
+<span>Since we had left the tropic land of Amazonia's shore.</span>
+</p>
+<p class="p1">
+<span><a class="innerScroll" href="#2" id="2">[[2]]</a> Not long the brunt of wind and wave our ship</span>
+</p>
+<p class="p1">
+<span>Not long the brunt of wind and wave our ship was doomed to bear</span>
+</p>
+<p class="p1">
+<span>For within her bosom gaining strength an enemy was there.</span>
+</p>
+<p class="p1">
+<span>At morn nor sight, not sight, nor swell, proclaimed the deadly foe</span>
+</p>
+<p class="p1">
+<span>Which ere noon with all restless strength rushed upwards from below.</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>We'd hardly time the boats to launch into the ocean wave</span>
+</p>
+<p class="p1">
+<span>With oars and sails and what at hand we hastily could save,</span>
+</p>
+<p class="p1">
+<span>And bread and water, for no fate more terrible can be,</span>
+</p>
+<p class="p1">
+<span>Than of thirst to die surrounded by the waters of the sea.</span>
+</p>
+<p class="p1">
+<span>When the raging flames up shrouds and sails flew furious and fast,</span>
+</p>
+<p class="p1">
+<span>And at night but a cauldron of boiling flame upon the ocean lay,</span>
+</p>
+<p class="p1">
+<span>Where the gallant "Helen" in all her pride had sailed at break of day.</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>Next morn we spread our little sails before a favoring breeze</span>
+</p>
+<p class="p1">
+<span>And for Bermuda steered our course across the trackless seas</span>
+</p>
+<p class="p1">
+<span>In hopes some ship might pick us up ere many days were past,</span>
+</p>
+<p class="p1">
+<span>Or on that distant Island's shore we might arrive at last.</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>But hope was faint within our breasts; seven hundred miles away,</span>
+</p>
+<p class="p1">
+<span>A green speck on the ocean those fertile islands lay</span>
+</p>
+<p class="p1">
+<span>And raging storms might swamp our boats or ships might pass by night,</span>
+</p>
+<p class="p1">
+<span>For from a boat at the water's edge not far can pierce the sight.</span>
+</p>
+<p class="p1"></p>
+<p class="p1">
+<span>Then days and nights of weary hours passes anxiously and slow.</span>
+</p>
+<p class="p1">
+<span>The threat'ning clouds began to low'r and adverse winds to blow.</span>
+</p>
+                            </div>
+
+                            
+                            
+                                <div id="transcript-disclaimer">
+                                    <p style="margin:auto;width:450px;text-align:center;">Please note that work on this transcript is not yet complete. Users are advised to study electronic image(s) of this document, if available.</p>
+                                </div>
+                            
+
+
+
+                        </div>
+
+                    
+
+                    
+
+                </div>
+            
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div>
+         <table>
+             <tbody><tr>
+
+                 <td>
+    
+    
+</td>
+
+</tr>
+<tr>
+    
+        <td>
+            <b>Literary copyright </b>&nbsp;A. R. Wallace Literary Estate
+        </td>
+    
+    
+
+    
+  
+             
+</tr>
+</tbody></table>
+</div>
+
+
+    <input type="hidden" value="T" id="show">
+
+
+
+
+
+
+
+<input id="dhSectionContainingKeywords" type="hidden" value="">    
+<input id="SearchKeyWords" type="hidden" value="">
+<input id="SearchKeyWords" type="hidden" value="">
+<script type="text/javascript">
+    var str = document.getElementById('SearchKeyWords').value;
+    var n = str.split(", ");
+    $("body").highlight(n);
+    $("#transcript-highlight").unhighlight(n);
+    $("h1").unhighlight(n);
+</script>
+<script type="text/javascript">
+    var str = document.getElementById('dhSectionContainingKeywords').value;
+    var n = str.split(", ");
+    var cleansed = [];
+    $.each(n, function (i, el) {
+        if ($.inArray(el, cleansed) === -1)
+            cleansed.push(el);
+    });
+    for (var i = 0; i < cleansed.length; i++) {
+        var boxtoDisplay = cleansed[i];
+        var boxh4toDisplay = cleansed[i] + 'h4';
+
+        if (boxtoDisplay != "") {
+            displayhide(boxtoDisplay, boxh4toDisplay);
+        }
+    }
+</script>   
+
+
+
+
+            </div>
+            
+
+            
+        </div>
+        
+    
+
+</body></html>
