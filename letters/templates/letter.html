@@ -2,7 +2,8 @@
 {% include 'include/head.html' %}
 
 <head>
-            <script type="text/javascript" src="./test_files/nhm.js"></script>
+
+<!--            <script type="text/javascript" src="./test_files/nhm.js"></script> -->
 <style type="text/css">
     {# <!--@import url("http://www.nhm.ac.uk/styles/nhm-page.css"); --> todo: sabbar layout... #}
     @import url("http://www.nhm.ac.uk/styles/content.css");
@@ -41,26 +42,53 @@
 
 <div class="alert alert-warning" </div>
 
-<dl class="dl-horizontal"> <br> {{ debug }} <br><br>
-    <dt>Description</dt>{# debug #}
-{# Replace with edit button. Can't get glyph-icon to display (?) #}
-      <div class="checkbox" style="float:right">
-<button type="button" class="btn btn-default btn-lg"><a href="../letter_edit?id={{ item_tblMaster_dict['pk_WCP_Number'] }}">edit</a></button>
-  </div>
+<a style="float:right" href="/letter_edit?id={{ item_tblMaster_dict['pk_WCP_Number'] }}">Edit</a>
+
+<p>
+
+<dl class="dl-horizontal">
+
+<div style="font-family:arno-pro-small-text;color:#ae262a"><dt>
+<i> {{ item_tblMaster_dict['sender_name']}} </i> <a href="/person/?id={{ item_tblMaster_dict['fk_PersonID_Author'] }}"> icon </a> to <i> {{item_tblMaster_dict['addressee_name']}}</i> <a href="/person/?id={{ item_tblMaster_dict['fk_PersonID_Addressee']}}"> icon, </a> {{ item_tblMaster_dict['Day'] }} {{ item_tblMaster_dict['Month'] }} {{ item_tblMaster_dict['Year'] }} n.s.
+		<br>
+Sent from <i> {{'adress'}} </i> to <i>{{'address'}}</i>.
+<!-- <div style="font-family:arno-pro-small-text;color:#ae262a">
+		<dt>Link: linnaeus.c18.net/Letter/L0061 ?
+		Carl  Linnaeus  to Johannes  Burman, 24 January 1736 n.s.
+		<br>
+		Sent from Hartecamp (Netherlands) to Amsterdam (Netherlands).
+
+		</dt>	</div>
+-->
+</dt></div>
+  {% if item_tblInHandOf_dict['InHandOf']|length > 0 or item_tblInHandOf_dict['collection']|length > 1 or item_tblInHandOf_dict['InHandOfDocumentID']|length > 1 %}
+   <dt> Held by: {{item_tblInHandOf_dict['InHandOf']}} part of {{item_tblInHandOf_dict['collection']}} with ID {{item_tblInHandOf_dict['InHandOfDocumentID']}}</dt>
+   {% else %}
+   <dt> Held by: unknown. </dt>
+   {% endif %}
+{# Print reprints #}
+   {% if item_tblReference_dict['pk_ReferenceID']|length > 0 %}
+   Reprints: <a href="/source/?id={{item_tblReference_dict['pk_ReferenceID'] }}"> {{item_tblReference_dict['Title'] }}</a>, ({{item_tblReference_dict['YearPublished']}})
+    {% else %}
+   {#No printed editions found#}
+   {% endif %}
+{# end print reprints #}
 
 
-Link: {{ link }}
 
-    <dd style="color:#ae262a">
-L{{ item_tblMaster_dict['pk_WCP_Number'] }}. {{ item_tblMaster_dict['sender_name']}}
-<a href="/person/?id={{ item_tblMaster_dict['fk_PersonID_Author'] }}"> icon </a>
-to
-        {{item_tblMaster_dict['addressee_name']}}
-<a href="/person/?id={{ item_tblMaster_dict['fk_PersonID_Addressee']}}"> icon </a>,
+{# Print summary #}
+   {% if item_tblMaster_dict['Summary']|length > 0 %}
+   Summary:
+<blockquote style="background:white;color:black">
+	<p>
+		{{ item_tblItem_dict['Summary'] }}.
+	</p>
+</blockquote>
+   {% else %}
+<br><br><br>No summary found.
+   {% endif %}
 
-</dd>
-<dd style="color:#ae262a"> Sent from {{'adress'}} to {{'address'}}. {{ item_tblMaster_dict['Day'] }} {{ item_tblMaster_dict['Month'] }} {{ item_tblMaster_dict['Year'] }}
-
+<blockquote style="background:white;color:black">
 {#  Print notes on letter #}
 {% if item_tblMaster_dict['NotesLetterDate']|length > 0 %}
     <a href="#" data-toggle="tooltip" title="test, hooray">Note </a>
@@ -72,114 +100,85 @@ to
     {% if item_tblItem_dict['Language']|length > 0 %}
     Written in {{'language'}}. </dd>
     {% endif %}
-
  </dl>
 
-<!-- <div style="font-family:arno-pro-small-text;color:#ae262a">
-		<dt>Link: linnaeus.c18.net/Letter/L0061 ?
-		Carl  Linnaeus  to Johannes  Burman, 24 January 1736 n.s.
-		<br>
-		Sent from Hartecamp (Netherlands) to Amsterdam (Netherlands).
 
-		</dt>	</div>
--->
-{# Print transcript #}
-   {% if item_tblItem_dict['TranscriptFileName']|length > 0 %}
-   Transcript:
+{#
+{% for image_name,PageNo in item_tblImage_dict %}
+{ PageNo }
+<p>
+	<img src="/images/{{ image_name }}" alt="scanned image">
+</p>
+
+
+{% endfor %}
+#}
+
+{# START show image #}
+<p>​
+{% if item_tblImage_dict|length == 0 %}
+No letter scanned
+{% elif page > 0 %}
+	<img src="/images/{{item_tblImage_dict[page-1][0]}}" alt="scanned image">
+{% endif %}
+</p>​
+{# END show image #}
+
+
+
+{# START prev/next page logic #}
+{% if item_tblImage_dict|length == 0 %}
+
+{% elif page == 1 %}
+<p align="center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href="/letter/?id={{item_tblMaster_dict['pk_WCP_Number']}}&p={{page+1}}">&nbsp;next&nbsp;page&nbsp;&gt;&gt;</a><br clear="all"></p>
+{% elif page > 1 and page != item_tblImage_dict|length %}
+<p align="center"> <a href="/letter/?id={{item_tblMaster_dict['pk_WCP_Number']}}&p={{page-1}}">&lt;&lt;&nbsp;prev.&nbsp;page&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;  <a href="/letter/?id={{item_tblMaster_dict['pk_WCP_Number']}}&p={{page+1}}">&nbsp;next&nbsp;page&nbsp;&gt;&gt;</a><br clear="all"></p>
+{% elif page == item_tblImage_dict|length %}
+<p align="center"> <a href="/letter/?id={{item_tblMaster_dict['pk_WCP_Number']}}&p={{page-1}}">&lt;&lt;&nbsp;prev.&nbsp;page&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;<br clear="all"></p>
+
+{% endif %} 
+{# END prev/next page logic #}
+
+<hr noshade>​
+<i>Below is the <b>raw OCR text</b> from the above scanned image. Do you see an error? <a href="/rc.pl?action=diff&src={{ item_tblMaster_dict['pk_WCP_Number'] }}/{{ PageNo }}.html"> Proofread the page now! </a></i>
+
+
+{# Lägg in en if-sats här för #prooreads#}
+<br>
+<i>This page has been proofread at least once. <a href="/rc.pl?action=diff&src={{ item_tblMaster_dict['pk_WCP_Number'] }}/{{ PageNo }}.html">(diff)<a/> <a href="/rc.pl?action=history&src={{ item_tblMaster_dict['pk_WCP_Number'] }}/{{ PageNo }}.html">(history)<a/> <i>
+
+
+{# START show transcript #}
+<p>
+{% if item_tblTranscript_dict|length == 0 %}
+
+{% elif page > 0 %}
 <blockquote style="background:white;color:black">
-  <p>{{ item_tblItem_dict['TranscriptFileName'] }}.</p>
-<!-- todo transcript by user_ID -->
-<!-- todo transcript verified by user_ID -->
+	<p>
+		{{ item_tblTranscript_dict[page-1][0] }} <br>
+	</p>
 </blockquote>
+
+{% elif item_tblItem_dict['HideTranscript']|length == 1 %}
+       {# Transcript hidden #}
+{% else %}
+   No transcript found. <br>
+{% endif %}
+{# END show transcript #}
+
+
+{#
    Transcript information:
             {% if item_tblItem_dict['TranscriptionDate']|length > 0  %}
                 Date of transcription: item_tblItem_dict['TranscriptionDate']
             {% endif %}
-
-   {% elif item_tblItem_dict['HideTranscript']|length == 1 %}
-       Transcript hidden.
- {% else %}
-   No transcript found. <br>
-   {% endif %}
-
-{# Print summary #}
-   {% if item_tblMaster_dict['Summary']|length > 0 %}
-   Summary:
-<blockquote style="background:white;color:black">
-  <p>{{ item_tblItem_dict['Summary'] }}.</p>
-<!-- todo summary by user_ID -->
-<!-- todo summary verified by user_ID -->
-</blockquote>
-   {% else %}
-   <br><br>No summary found.<br>
-   {% endif %}
-
-
-   <br>
-{# Print manuscripts #}
-
-   {# if check overdone ... simply when more alert lol. #}
-
-   {% if item_tblInHandOf_dict['InHandOf']|length > 0 or item_tblInHandOf_dict['collection']|length > 1 or item_tblInHandOf_dict['InHandOfDocumentID']|length > 1 %}
-   Manuscripts: <br>
-   1. original holograph ({{item_tblInHandOf_dict['InHandOf']}}, {{item_tblInHandOf_dict['collection']}}, {{item_tblInHandOf_dict['InHandOfDocumentID']}})
-   {% else %}
-   No manuscripts found
-   {% endif %}
-   <br>
-{# Print editions #}
-   {% if item_tblReference_dict['pk_ReferenceID']|length > 0 %}
-   Editions: <br>
-   1. Source: <a href="/source/?id={{item_tblReference_dict['pk_ReferenceID'] }}"> {{item_tblReference_dict['Title'] }}</a>,
-   ({{item_tblReference_dict['YearPublished']}})
-    {% else %}
-   <br>No editions found
-   {% endif %}
-{# end print edtions #}
-
-   <br><br>
-
-{# {% for image_name,PageNo in item_tblImage_dict %}
- Image name: {{ image_name }}, PageNo: {{ PageNo }} <br>
-{% endfor %} #}
-
-        <div class="panel clearfix">
-                <div class="panel-content">
-                                <div>
-                                    <input type="hidden" value="/images/" id="imagesLocation">
-                                <div>
-                                <ul class="recordset-nav-pages" id="pagination">
-                                {% for image_name,PageNo in item_tblImage_dict %}
-                                    <li data-index="{{ PageNo }}" class=""><a href="#S{{ PageNo }}" class="scanScroll">{{ PageNo }}</a></li>
-                                {% endfor %}
-                                </ul>
-                                </div>
-                                    <ul id="items" style="display:none">
-                                            {% for image_name,PageNo in item_tblImage_dict %}
-                                                <li style="display: none;" id="image-{{ PageNo }}">
-                                                    {{ image_name }}
-                                                </li>
-                                            {% endfor %}
-                                </ul>
-                            </div>
-                            <div id="viewer2" class="viewer iviewer_cursor" style="overflow: hidden;">
-
-
-                                    <div id="viewer-error" style="display: none;">
-                                        Sorry, this scan is not currently available.
-                                    </div>
-                                <div class="viewer-controls"><ul><li class="iviewer_zoom_in iviewer_common iviewer_button"></li>
-                                    <li class="iviewer_zoom_out iviewer_common iviewer_button"></li><li class="iviewer_zoom_zero iviewer_common iviewer_button"></li><li class="iviewer_zoom_fit iviewer_common iviewer_button"></li><li class="iviewer_zoom_status iviewer_common">25%</li><li class="iviewer_rotate_left iviewer_common iviewer_button"></li><li class="iviewer_rotate_right iviewer_common iviewer_button"></li></ul></div></div>
-
-                </div>
-        </div>
-
-
-
+#}
 
 
    {# begin footer #}
 by <a href="/person/{{ fk_EditorID_RecordCreator }}l">N/A</a> on {{ item_tblMaster_dict['RecordDate'] }}
+
+
     {# end footer #}
 </div>
 </div></body></html>

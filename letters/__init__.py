@@ -5,22 +5,18 @@ import datetime
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
+
+import db_handler
+
 app = Flask(__name__)
 #from bson.objectid import ObjectId
 
 #### Config SQLite ####
 DATABASE = '../db/letters.db'
 
-#### Configure iamge upload
-UPLOAD_FOLDER = '../images/'
-STATIC_FOLDER = '../static'
-ALLOWED_EXTENSIONS = set(['png','jpg','jpeg','gif'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['STATIC_FOLDER'] = STATIC_FOLDER
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 def get_db():
 	db = getattr(g, '_database', None)
@@ -38,6 +34,18 @@ def query_db(query, args=(), one=False):
 		rv = get_db().commit()
 		cur.close()
 	return (rv[0] if rv else None) if one else rv
+
+
+#### Configure iamge upload
+UPLOAD_FOLDER = '../images/'
+STATIC_FOLDER = '../static'
+ALLOWED_EXTENSIONS = set(['png','jpg','jpeg','gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['STATIC_FOLDER'] = STATIC_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def front():
@@ -61,9 +69,12 @@ def return_search():
 		GET_sender = ""
 	else:
 		GET_sender = GET_sender.encode('utf8')
+
+	if GET_correspondent_2 is None:
+		GET_correspondent_2 = ""
+	else:
+		GET_correspondent_2 = GET_correspondent_2.encode('utf8')
 	# GET_year
-
-
 	if isinstance(GET_sender, str):
 		# Find a name  LIKE % ' + GET_sender + '% OR has GET_sender_ID
 		if GET_sender_ID is not None:
@@ -88,11 +99,17 @@ def return_search():
 
 			addressee_dict = {}
 			for row in response_SELECT_tblMaster:
-				fk_PersonID_Addressee = row[4]
+				if row[4] in ['Null','',0,None]: # dvs om Person är unknown
+					fk_PersonID_Addressee = 0
+				else:
+					fk_PersonID_Addressee = row[4]
 				Person_Name = query_db("SELECT Title,Forenames,Surname,FullNameTemp FROM tblPerson WHERE pk_PersonID = ?", [str(fk_PersonID_Addressee)])
+				if fk_PersonID_Addressee == 0:
+					addressee_name = Person_Name[0][2]
 				# SQL_lite: parametrized
-				addressee_name = Person_Name[0][0] + " " + Person_Name[0][1] + " " + Person_Name[0][2]
-				# Todo: FullNameTemp (ie Person_Name[0][3] is not consistently used.. Remove?
+				else: #dvs för att utom PersonID = 0, dvs unknown
+					addressee_name = Person_Name[0][0] + " " + Person_Name[0][1] + " " + Person_Name[0][2]
+#				# Todo: FullNameTemp (ie Person_Name[0][3] is not consistently used.. Remove?
 				addressee_dict[fk_PersonID_Addressee] = addressee_name
 
 #			author = len(author)
@@ -109,10 +126,12 @@ def return_search():
 			response_SELECT_tblMaster = ''
 			addressee_dict = {}
 			return render_template('results.html', author_ID = author_ID, author_name = author_name, GET_year = GET_year, GET_sender = GET_sender, response_SELECT_tblMaster=response_SELECT_tblMaster, addressee_dict=addressee_dict, author=author)
-		elif len(author) > 1 and len(correspondent_2) ==1:
+		elif len(author) > 1 and len(correspondent_2) == 1:
 			# We got multiple hits for author, but a single match for correspondent_2
+			sys.exit()
 		elif len(author) == 1 and len(correspondent_2) > 1:
 			# We got a single match for author, but multiple hits for correspondent_2
+			sys.exit()
 		else:
 			# No hits for either correspondent in DB
 			addressee_dict = {}
@@ -129,8 +148,21 @@ def return_search():
 
 @app.route('/letter/')
 def return_letter():
+# Kan man inte typ bara korta ned denna .. och direkt använda URL-id:t???
+
+	if None in [request.args.get('id')]:
+		return redirect('/')
 	GET_id = request.args.get('id').encode('utf8')
 	GET_id = filter(lambda x: x.isdigit(), GET_id)		#only allows int (SQL-filter)
+
+
+	if request.args.get('p') in [None,'']:
+		page_GET = None
+	else:
+		page_GET = request.args.get('p').encode('utf8')
+#		page_GET = page_GET.replace('.jpg','')
+		page_GET = int(page_GET)
+#		page_GET = filter(lambda x: x.isdigit(), page_GET)  # only allows int (SQL-filter)
 
 # Get contents of master table
 	db_tblMaster_columns = ["pk_WCP_Number","TempNumber","ParentRecordType","fk_PersonID_Author","AuthorInferred","AuthorUncertain",
@@ -144,43 +176,40 @@ def return_letter():
 	item_tblMaster_dict = {}
 	for column_name in db_tblMaster_columns:
 		item_tblMaster_dict[column_name] = response_SELECT_tblMaster[0][db_tblMaster_columns.index(column_name)]
-	debug = ["odd",item_tblMaster_dict['Summary'],item_tblMaster_dict['RecordDate'],"<br><br>","full",item_tblMaster_dict]
-	item_tblMaster_dict['AddresseeUncertain'] = 'a'
-	debug = item_tblMaster_dict
-#	debug = item_tblMaster_dict['Summary']
 
-#	debug = item_tblMaster_dict
+	item_tblMaster_dict['AddresseeUncertain'] = 'a'
+
 # Columns and comments of item_tblMaster_dict
-	#pk_WCP_Number						# used
-	#TempNumber							# N/A
-	#ParentRecordType					# N/A, for now only letters
-	#fk_PersonID_Author					# used/implemented
-	#AuthorInferred						# todo how? N/A?
-	#AuthorUncertain					# todo how? N/A?
+	#pk_WCP_Number					# used
+	#TempNumber					# N/A
+	#ParentRecordType				# N/A, for now only letters
+	#fk_PersonID_Author				# used/implemented
+	#AuthorInferred					# todo how? N/A?
+	#AuthorUncertain				# todo how? N/A?
 	#fk_AddressID_Author				# todo
 	#AuthorsAddressInferred				# todo how? N/A?
 	#AuthorsAddressUncertain			# todo how? N/A?
 	#fk_PersonID_Addressee				# in use/implemented.
-	#AddresseeInferred					# todo how? N/A?
-	#AddresseeUncertain					# todo how? N/A?
+	#AddresseeInferred				# todo how? N/A?
+	#AddresseeUncertain				# todo how? N/A?
 	#fk_AddressID_Addressee				# todo
 	#AddresseesAddressInferred			# todo how? N/A?
 	#AddresseesAddressUncertain			# todo how? N/A?
-	#Day								# in use/implemented. Used to display date
-	#DayInferred						# todo how? N/A?
-	#DayUncertain						# todo how? N/A?
-	#Month								# in use/implemented. Used to display date
-	#MonthInferred						# todo how? N/A?
-	#MonthUncertain						# todo how? N/A?
-	#Year								# in use/implemented. Used to display date
-	#YearInferred						# todo how? N/A?
-	#YearUncertain						# todo how? N/A?
-	#NotesLetterDate					# in use/implemented
-	#Summary							# in use/implemented. Used to display summary
-	#ScrutinySumm						# todo
+	#Day						# in use/implemented. Used to display date
+	#DayInferred					# todo how? N/A?
+	#DayUncertain					# todo how? N/A?
+	#Month						# in use/implemented. Used to display date
+	#MonthInferred					# todo how? N/A?
+	#MonthUncertain					# todo how? N/A?
+	#Year						# in use/implemented. Used to display date
+	#YearInferred					# todo how? N/A?
+	#YearUncertain					# todo how? N/A?
+	#NotesLetterDate				# in use/implemented
+	#Summary					# in use/implemented. Used to display summary
+	#ScrutinySumm					# todo
 	#fk_EditorID_RecordCreator			# in use/implemented.
-	#RecordDate							# in use/implemented.
-	#HideRecord							# todo
+	#RecordDate					# in use/implemented.
+	#HideRecord					# todo
 
 	author_ID = item_tblMaster_dict['fk_PersonID_Author']
 	author_Name = query_db("SELECT Title,Forenames,Surname FROM tblPerson WHERE pk_PersonID = ?", [str(author_ID)])
@@ -212,8 +241,11 @@ def return_letter():
 			"HideImages","TranscriptFileName","fk_EditorID_Transcriber","TranscriptionDate","ScrutinyTrans",
 			"fk_EditorID_SignedOff","DateSignedOff","HideTranscript","ScrutinyRecord","fk_EditorID_RecordCreator","RecordDate"]
 	# Fetch letter information
-	fk_WCP_Number = item_tblMaster_dict['pk_WCP_Number']
-	response_SELECT_tblItem = query_db("SELECT * from tblItem WHERE fk_WCP_Number = ?", [fk_WCP_Number])
+	pk_ItemID = item_tblMaster_dict['pk_WCP_Number']
+
+
+	response_SELECT_tblItem = query_db("SELECT * from tblItem WHERE pk_ItemID = ?", [pk_ItemID])
+
 
 	item_tblItem_dict = {}
 	for column_name in db_tblItem_columns:
@@ -308,18 +340,21 @@ def return_letter():
 			item_tblInHandOf_dict[column_name] = response_SELECT_tblInHandOf[0][db_tblInHandOf_columns.index(column_name)]
 		else:
 			item_tblInHandOf_dict[column_name] = ''
-#Columns and comments of tblInHandOf
-	# pk_InHandOfID						# todo, for edit
-	# InHandOf							# in use/implemented
-	# collection						# in use/implemented
-	# InHandOfDocumentID				# in use/implemented
 
+		########################
+#Columns and comments of tblImage    ##########
+		########################
+	# pk_ImageID						 
+	# fk_ItemID						 
+	# ImageFileName						 
+	# SortNo				 
+	# PageNo
 
-	# Get contents of master table
+	# Get contents of tblImage
 	db_tblImage_columns = ["pk_ImageID","fk_ItemID","ImageFileName","SortNo","PageNo"]
 	response_SELECT_tblImage = query_db("SELECT ImageFileName,PageNo from tblImage WHERE fk_ItemID = ?", [pk_ItemID])
 
-	# Dictionary type of data from tblMaster
+	# Dictionary type of data from tblImage
 	# Todo: standardize db_response -> dict conversion!
 	item_tblImage_dict = []
 	for row in response_SELECT_tblImage:
@@ -329,18 +364,63 @@ def return_letter():
 #		item_tblMaster_dict[column_name] = response_SELECT_tblImage[0][db_tblMaster_columns.index(column_name)]
 
 
+	# Get contents of tblTranscript
+	db_tblTranscript_columns = ["pk_TranscriptID","fk_TranscriptID","TranscriptFileName","PageNo"]
+	response_SELECT_tblTranscript = query_db("SELECT TranscriptFileName,PageNo from tblTranscript WHERE fk_TranscriptID = ?", [pk_ItemID])
+
+	# Dictionary type of data from tblTranscript
+	item_tblTranscript_dict = []
+	for row in response_SELECT_tblTranscript:
+		TranscriptFileName = row[0]
+		TranscriptPageNo = row[1]
+		item_tblTranscript_dict.append([TranscriptFileName,TranscriptPageNo])
+
+
 	#Temp vars for testing
 	item_tblMaster_dict['Summary'] = ''
 	#item_tblMaster_dict['NotesLetterDate'] = ''
+	if item_tblMaster_dict['NotesLetterDate'] is None:
+		item_tblMaster_dict['NotesLetterDate'] = ''
 	item_tblItem_dict['TranscriptionDate'] = ''
 	item_tblItem_dict['HideTranscript'] = ''
 
-	return render_template('letter.html', item_tblMaster_dict = item_tblMaster_dict, debug=debug, item_tblItem_dict=item_tblItem_dict, item_tblReference_dict=item_tblReference_dict, item_tblInHandOf_dict=item_tblInHandOf_dict, link=link, item_tblImage_dict=item_tblImage_dict)
+	debug = ''
+#	for image_name,PageNo in item_tblImage_dict:
+#		print(image_name)
+#		print(PageNo)
+
+	# om ?p=X är None, men det finns sidor.
+	if page_GET is None and len(item_tblImage_dict) > 0:
+		return redirect("/letter?id=" + GET_id + "&p=1")
+	# om ?p=X är ett heltal, men det inte finns några sidor
+	if page_GET is not None and len(item_tblImage_dict) == 0:
+		return redirect("letter?id=" + GET_id)
+		item_tblImage_dict = []
+		item_tblTranscript_dict = []
+	# om ?p=X är större än faktiskt antal sidor
+	if page_GET is not None and page_GET > len(item_tblImage_dict):
+		return redirect("/letter?id=" + GET_id + "&p=1")
+
+
+	print("#################")
+	print("#################")
+	print("#################")
+	print("#################")
+	print("#################")
+	print(item_tblTranscript_dict)
+	print(item_tblImage_dict)
+	print(response_SELECT_tblTranscript)
+
+#	item_tblImage_dict[page_GET]
+#	image_info = [image_name, page_number]
+
+
+	return render_template('letter.html', item_tblMaster_dict = item_tblMaster_dict, debug=debug, item_tblItem_dict=item_tblItem_dict, item_tblReference_dict=item_tblReference_dict,item_tblInHandOf_dict=item_tblInHandOf_dict, link=link, item_tblImage_dict=item_tblImage_dict, page=page_GET,item_tblTranscript_dict=item_tblTranscript_dict)
 
 @app.route('/images/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+	print(1)
+	return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 #todo                   ***********************************
 #todo				************ SUBMIT ***************
@@ -640,6 +720,7 @@ def upload_letter():
 def return_person():
 	GET_id = request.args.get('id').encode('utf8')
 	GET_id = filter(lambda x: x.isdigit(), GET_id)  # only allows int (SQL-filter)
+
 
 	# Get contents of master table
 	db_tblPerson_columns = ["pk_PersonID", "Surname", "Forenames", "FullNameTemp", "Title", "BirthDate",
